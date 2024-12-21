@@ -41,7 +41,8 @@ body {
 
 @media (min-width: 64em) {
   .country-flag,
-  .country-info {
+  .country-info
+  .dark-country-info {
     flex: 1 0 calc(50% - 30px);
   }
 }
@@ -159,6 +160,7 @@ body {
 }
 .country-name, .country-region, .country-capital, .country-population {
   padding-top: 20px;
+  font-weight: bold;
 }
 
 .dark-country-info {

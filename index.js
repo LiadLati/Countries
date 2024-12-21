@@ -14,8 +14,7 @@ const displayCountries = (countries) => {
         const countryDiv = `
       <a href ="details.html"
         onclick="setDetailsOfCountry('${country.flag}','${country.name}','${country.population}','${country.region}','${country.capital}')"
-        class="country scale-effect countryDiv"
-        data-country-name="Afghanistan">
+        class="country scale-effect countryDiv">
         <div class="country-flag">
           <img src="${country.flag}"/>
         </div>
@@ -34,7 +33,7 @@ const displayCountries = (countries) => {
 }
 
 
-const darkMode = () => {
+const makeDarkModePage = () => {
     const lightBody = document.querySelector('.body');
     const darkBody = document.querySelector('.dark-theme');
     const headerBackgroundColor = getComputedStyle(document.querySelector('header')).backgroundColor;
@@ -87,20 +86,16 @@ const filterByContinants = () => {
                 .then(response => response.json())
                 .then(countriesJson => {
                     let filteredCountries = countriesJson;
-                    if (chosenRegion == 'africa') {
-                        filteredCountries = filteredCountries.filter(country => country.region === 'Africa');
-                    }
-                    if (chosenRegion == 'america') {
-                        filteredCountries = filteredCountries.filter(country => country.region === 'Americas');
-                    }
-                    if (chosenRegion == 'asia') {
-                        filteredCountries = filteredCountries.filter(country => country.region === 'Asia');
-                    }
-                    if (chosenRegion == 'europe') {
-                        filteredCountries = filteredCountries.filter(country => country.region === 'Europe');
-                    }
-                    if (chosenRegion == 'oceania') {
-                        filteredCountries = filteredCountries.filter(country => country.region === 'Oceania');
+                    const regionMap = {
+                        america: 'Americas',
+                        asia: 'Asia',
+                        europe: 'Europe',
+                        oceania: 'Oceania',
+                        africa: 'Africa'
+                    };
+
+                    if (chosenRegion in regionMap) {
+                        filteredCountries = filteredCountries.filter(country => country.region === regionMap[chosenRegion]);
                     }
                     displayCountries(filteredCountries);
                 })
@@ -110,6 +105,19 @@ const filterByContinants = () => {
 }
 filterByContinants();
 
-const searchCountry = () => {
+const searchTheCountryByName = () => {
+    const searchInput = document.querySelector('.search-input');
+    searchInput.addEventListener("input", () => {
+        fetch('./CountriesData.json')
+            .then(response => response.json())
+            .then(countriesJson => {
+                let filteredCountry = countriesJson;
+                if (searchInput.value) {
+                    filteredCountry = filteredCountry.filter(country => country.name.toLowerCase().includes(searchInput.value.toLowerCase()));
+ 
+                }
+                displayCountries(filteredCountry)
+            })
+    });
 }
-
+searchTheCountryByName();
